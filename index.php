@@ -64,4 +64,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			echo json_encode(['error' => $e->getMessage()]);
 		}
 	}
+
+	// Delete user
+	if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+		$data = json_decode(file_get_contents('php://input'), true);
+
+		if (empty($data['id'])) {
+			echo json_encode(['error' => 'UserID is required']);
+			exit;
+		}
+
+		$userID = $data['id'];
+
+		try {
+			$stmt = $conn->prepare('DELETE FROM users WHERE id = :id');
+			$stmt->bindParam(':id', $userID);
+			$stmt->execute();
+			echo json_encode(['success' => true]);
+		} catch (PDOException $e) {
+			echo json_encode(['error' => $e->getMessage()]);
+		}
+	}
 }
