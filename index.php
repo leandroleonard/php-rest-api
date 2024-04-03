@@ -2,6 +2,9 @@
 
 require_once "connection.php";
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: *");
+
 // GET users
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && empty($_GET)) {
 	try {
