@@ -39,4 +39,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	} catch (PDOException $e) {
 		echo json_encode(['error' => $e->getMessage()]);
 	}
+
+
+	// HTTP METHOD: PUT
+	// Update user
+	if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+		$data = json_decode(file_get_contents('php://input'), true);
+
+		if (empty($data['id'])) {
+			echo json_encode(['error' => 'UserID is required']);
+			exit;
+		}
+
+		$userID = $data['id'];
+
+		try {
+			$stmt = $conn->prepare('UPDATE users SET name = :name, email = :email WHERE id = :id');
+			$stmt->bindParam(':id', $userID);
+			$stmt->bindParam(':name', $name);
+			$stmt->bindParam(':email', $email);
+			$stmt->execute();
+			echo json_encode(['success' => true]);
+		} catch (PDOException $e) {
+			echo json_encode(['error' => $e->getMessage()]);
+		}
+	}
 }
